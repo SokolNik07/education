@@ -1,0 +1,24 @@
+version: '3.9'
+
+networks:
+  php-education-databases-network:
+    name: php-education-databases-network
+    driver: bridge
+
+volumes:
+  php-education-postgres-database-volume:
+
+services:
+  postgres:
+    image: postgres:15.1-alpine
+    container_name: php-education-postgres
+    restart: always
+    ports: ["5432:5432"]
+    environment:
+      POSTGRES_DB: php-education
+      POSTGRES_USER: php-education
+      POSTGRES_PASSWORD: php-education
+    volumes:
+      - php-education-postgres-database-volume:/var/lib/postgresql/data
+    networks:
+      - php-education-databases-network
