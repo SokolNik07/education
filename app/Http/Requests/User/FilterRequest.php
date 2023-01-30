@@ -27,7 +27,8 @@ class FilterRequest extends FormRequest
             'id' => 'nullable|integer',
             'name' => 'nullable|string',
             'email' => 'nullable|email',
-
+            'page' => '',
+            'per_page' => '',
         ];
     }
 }

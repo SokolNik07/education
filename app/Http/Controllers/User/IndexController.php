@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\FilterRequest;
+use App\Http\Resources\User\UserResource;
 use App\Models\User;
 
 class IndexController extends Controller
@@ -11,6 +12,9 @@ class IndexController extends Controller
     public function __invoke(FilterRequest $request)
     {
         $data = $request->validated();
+
+        $page = $data['page'] ?? 1;
+        $perPage = $data['per_page'] ?? 10;
 
         $user = User::query();
 
@@ -24,7 +28,8 @@ class IndexController extends Controller
         if (isset($data['id'])) {
             $user->where('id', '=', "{$data['id']}");
         };
-        $user = $user->paginate(10);
-        return $user;
+        $user = $user->paginate($perPage, ['*'], 'page', $page);
+
+        return UserResource::collection($user);
     }
 }

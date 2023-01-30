@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,33 +27,33 @@ Route::group(['namespace' => 'App\Http\Controllers\User'], function () {
     Route::patch('/users/{user}', 'UpdateController')->name('user.update');
     Route::delete('/users/{user}', 'DestroyController')->name('user.destroy');
 });
-//Route::group(['namespace' => 'App\Http\Controllers\Article'], function () {
-//    Route::get('/articles', 'IndexController')->name('article.index');
-//    Route::get('/articles/{article}', 'ShowController')->name('article.show');
-//    Route::get('/articles/create', 'CreateController')->name('article.create');
-//    Route::post('/articles', 'StoreController')->name('article.store');
-//    Route::get('/articles/edit/{article}', 'EditController')->name('article.edit');
-//    Route::patch('/articles/{article}', 'UpdateController')->name('article.update');
-//    Route::delete('/articles/{article}', 'DestroyController')->name('article.destroy');
-//});
-//Route::group(['namespace' => 'App\Http\Controllers\Video'], function () {
-//    Route::get('/videos', 'IndexController')->name('video.index');
-//    Route::get('/videos/{video}', 'ShowController')->name('video.show');
-//    Route::get('/videos/create', 'CreateController')->name('video.create');
-//    Route::post('/videos', 'StoreController')->name('video.store');
-//    Route::get('/videos/edit/{video}', 'EditController')->name('video.edit');
-//    Route::patch('/videos/{video}', 'UpdateController')->name('video.update');
-//    Route::delete('/videos/{video}', 'DestroyController')->name('video.destroy');
-//});
-//Route::group(['namespace' => 'App\Http\Controllers\Comment'], function () {
-//    Route::get('/comments', 'IndexController')->name('comment.index');
-//    Route::get('/comments/{comment}', 'ShowController')->name('comment.show');
-//    Route::get('/comments/create', 'CreateController')->name('comment.create');
-//    Route::post('/comments', 'StoreController')->name('comment.store');
-//    Route::get('/comments/edit/{comment}', 'EditController')->name('comment.edit');
-//    Route::patch('/comments/{comment}', 'UpdateController')->name('comment.update');
-//    Route::delete('/comments/{comment}', 'DestroyController')->name('comment.destroy');
-//});
+Route::group(['namespace' => 'App\Http\Controllers\Article'], function () {
+    Route::get('/articles', 'IndexController')->name('article.index');
+    Route::get('/articles/{article}', 'ShowController')->name('article.show');
+    Route::get('/articles/create', 'CreateController')->name('article.create');
+    Route::post('/articles', 'StoreController')->name('article.store');
+    Route::get('/articles/edit/{article}', 'EditController')->name('article.edit');
+    Route::patch('/articles/{article}', 'UpdateController')->name('article.update');
+    Route::delete('/articles/{article}', 'DestroyController')->name('article.destroy');
+});
+Route::group(['namespace' => 'App\Http\Controllers\Video'], function () {
+    Route::get('/videos', 'IndexController')->name('video.index');
+    Route::get('/videos/{video}', 'ShowController')->name('video.show');
+    Route::get('/videos/create', 'CreateController')->name('video.create');
+    Route::post('/videos', 'StoreController')->name('video.store');
+    Route::get('/videos/edit/{video}', 'EditController')->name('video.edit');
+    Route::patch('/videos/{video}', 'UpdateController')->name('video.update');
+    Route::delete('/videos/{video}', 'DestroyController')->name('video.destroy');
+});
+Route::group(['namespace' => 'App\Http\Controllers\Comment'], function () {
+    Route::get('/comments', 'IndexController')->name('comment.index');
+    Route::get('/comments/{comment}', 'ShowController')->name('comment.show');
+    Route::get('/comments/create', 'CreateController')->name('comment.create');
+    Route::post('/comments', 'StoreController')->name('comment.store');
+    Route::get('/comments/edit/{comment}', 'EditController')->name('comment.edit');
+    Route::patch('/comments/{comment}', 'UpdateController')->name('comment.update');
+    Route::delete('/comments/{comment}', 'DestroyController')->name('comment.destroy');
+});
 Route::group(['namespace' => 'App\Http\Controllers\Registration'], function () {
     Route::get('/registration', 'IndexController')->name('registration.index');
     Route::post('/registration', 'RegistrationController')->name('registration');
@@ -60,3 +61,19 @@ Route::group(['namespace' => 'App\Http\Controllers\Registration'], function () {
     Route::post('/login', 'LoginController')->name('login');
     Route::get('/logout', 'LogoutController')->name('logout');
 });
+
+Route::get('/email/verify', function () {
+    return view('verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');

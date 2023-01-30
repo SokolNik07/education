@@ -24,8 +24,9 @@ class RegistrationController extends Controller
         $user = User::create($data);
 
         if($user) {
-//            event(new Registered($user));
+            event(new Registered($user));
             Auth::login($user);
+            return redirect()->route('verification.notice');
         }
     }
 }
