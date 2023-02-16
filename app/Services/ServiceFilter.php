@@ -1,18 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Article;
+namespace App\Services;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Article\FilterRequest;
-use App\Http\Resources\Article\ArticleResource;
-use App\Models\Article;
-
-class IndexController extends Controller
+class ServiceFilter
 {
-    public function __invoke(FilterRequest $request, Article $model, ArticleResource $resource)
+    public function filter($request, $model, $resource)
     {
-//        $this->serviceFilter->filter($request, $model, $resource);
-
         $page = $request['page'] ?? 1;
         $perPage = $request['per_page'] ?? 10;
 

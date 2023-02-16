@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Registration;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\RegistrationRequest;
+use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,7 @@ class RegistrationController extends Controller
         if($user) {
             event(new Registered($user));
             Auth::login($user);
-            return redirect()->route('verification.notice');
+            return new UserResource($user);
         }
     }
 }

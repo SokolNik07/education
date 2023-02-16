@@ -11,6 +11,8 @@ class IndexController extends Controller
 {
     public function __invoke(FilterRequest $request)
     {
+        $this->authorize('view', auth()->user());
+
         $data = $request->validated();
 
         $page = $data['page'] ?? 1;
@@ -21,7 +23,6 @@ class IndexController extends Controller
         if (isset($data['name'])) {
             $user->where('name', 'like', "%{$data['name']}%");
         };
-
         if (isset($data['email'])) {
             $user->where('email', 'like', "%{$data['email']}%");
         };

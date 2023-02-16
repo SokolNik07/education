@@ -10,7 +10,8 @@ class DestroyController extends Controller
 {
     public function __invoke(User $user)
     {
-
-    $user->delete();
+        $this->authorize('delete', auth()->user());
+        $user->delete();
+        return ('OK');
     }
 }

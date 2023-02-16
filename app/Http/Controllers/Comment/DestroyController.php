@@ -9,6 +9,8 @@ class DestroyController extends Controller
 {
     public function __invoke(Comment $comment)
     {
-    $comment->delete();
+        $this->authorize('delete', $comment);
+        $comment->delete();
+        return ('OK');
     }
 }

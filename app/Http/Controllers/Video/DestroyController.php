@@ -9,6 +9,8 @@ class DestroyController extends Controller
 {
     public function __invoke(Video $video)
     {
-    $video->delete();
+        $this->authorize('delete', $video);
+        $video->delete();
+        return ('OK');
     }
 }

@@ -7,12 +7,11 @@ use App\Http\Requests\Article\FilterRequest;
 use App\Http\Resources\Article\ArticleResource;
 use App\Models\Article;
 
-class IndexController extends Controller
+class Index extends Controller
 {
-    public function __invoke(FilterRequest $request, Article $model, ArticleResource $resource)
+ public $request;
+    public function __invoke(FilterRequest $request, Article $model)
     {
-//        $this->serviceFilter->filter($request, $model, $resource);
-
         $page = $request['page'] ?? 1;
         $perPage = $request['per_page'] ?? 10;
 
@@ -33,6 +32,6 @@ class IndexController extends Controller
 
         $builder = $builder->paginate($perPage, ['*'], 'page', $page);
 
-        return $resource->collection($builder);
+        return ArticleResource::collection($builder);
     }
 }

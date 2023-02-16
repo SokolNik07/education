@@ -9,7 +9,15 @@ class DestroyController extends Controller
 {
     public function __invoke(Article $article)
     {
+        $this->authorize('delete', $article);
 
-    $article->delete();
+//        if (Article::where('id', '=', $article['id'])->exists()) {
+//            $article->delete();
+//            return ('OK');
+//        }
+//        return ('Не ОК');
+
+        $article->delete();
+        return ('OK');
     }
 }

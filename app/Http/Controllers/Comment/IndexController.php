@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Comment;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Comment\FilterRequest;
 use App\Http\Resources\Comment\CommentResource;
+use App\Models\Comment;
 
 class IndexController extends Controller
 {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Registration;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\LoginRequest;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
@@ -12,9 +13,18 @@ class LoginController extends Controller
     {
         $data = $request->validated();
 
-        if (Auth::attempt($data)) {
-            print_r('Вы авторизовались!');
+        $user = User::where('email', $request->get('email'))->first(); // найти одного пользователя с совпавшим email
+
+        if (!$user) {
+            return ('Такого пользователя нет или email указан не верно');
         }
-        print_r('данные указанны не верно!');
+        if (Auth::attempt($data)) {                                        // если попытка аутентификации прошла успешно то
+            $token = $user->createToken('base');
+            return response()->json([
+                'token' => $token->plainTextToken                          // сгенерировать новый токен и вывести его текстовое значение
+            ]);
+        }
+        return ('email или пароль указаны не верно');
     }
 }
+

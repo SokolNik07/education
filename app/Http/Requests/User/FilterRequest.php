@@ -24,11 +24,11 @@ class FilterRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'nullable|integer',
-            'name' => 'nullable|string',
-            'email' => 'nullable|email',
-            'page' => '',
-            'per_page' => '',
+            'id' => ['sometimes', 'integer'],
+            'name' => ['sometimes', 'min:3', 'string'],
+            'email' => ['sometimes', 'min:3', 'string'],
+            'page' => ['integer'],
+            'per_page' => ['integer'],
         ];
     }
 }
