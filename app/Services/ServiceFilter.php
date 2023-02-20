@@ -2,30 +2,30 @@
 
 namespace App\Services;
 
+use Illuminate\Database\Eloquent\Builder;
+
 class ServiceFilter
 {
-    public function filter($request, $model, $resource)
+    public function filter(array $filter, Builder $builder): Builder // возвращаемый тип данных
     {
-        $page = $request['page'] ?? 1;
-        $perPage = $request['per_page'] ?? 10;
-
-        $builder = $model->query();
-
-        if (isset($request['name'])) {
-            $builder->where('name', 'ilike', "%{$request['name']}%");
+        foreach ($filter as $item) {
+            if(!array_key_exists('column', $item)) {
+                throw new \RuntimeException('не указан столбец');
+            }
+            $column = $item['column'];
+            if(!array_key_exists('value', $item)) {
+                throw new \RuntimeException('не указанно значение');
+            }
+            $value = $item['value'];
+            $operator = $item['operator'] ?? "=";
+            $boolean = $item['boolean'] ?? "and";
+            if (is_array($value)) {
+                $builder = $builder->whereIn($column, $value, $boolean);
+            } else {
+                $builder = $builder
+                    ->where($column, $operator, $value, $boolean);
+            }
         }
-        if (isset($request['article'])) {
-            $builder->where('article', 'ilike', "%{$request['article']}%");
-        }
-        if (isset($request['id'])) {
-            $builder->where('id', '=', $request['id']);
-        }
-        if (isset($request['user_id'])) {
-            $builder->where('user_id', '=', $request['user_id']);
-        }
-
-        $builder = $builder->paginate($perPage, ['*'], 'page', $page);
-
-        return $resource->collection($builder);
+        return $builder;
     }
 }

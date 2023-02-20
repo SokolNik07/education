@@ -23,7 +23,4 @@ class Article extends Model
     public function users() {
         return $this->belongsTo(User::class);
     }
-    public function index() {
-
-    }
 }
