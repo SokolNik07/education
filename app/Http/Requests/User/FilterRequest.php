@@ -24,9 +24,12 @@ class FilterRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['sometimes', 'integer'],
-            'name' => ['sometimes', 'min:3', 'string'],
-            'email' => ['sometimes', 'min:3', 'string'],
+            'filter' => ['sometimes', 'array'],
+            'filter.*' => ['sometimes', 'array'],
+            'filter.*.column' => ['sometimes', 'string', 'min:3','max:255'],
+            'filter.*.operator' => ['sometimes', 'in:>,<,>=,<=,=,ilike,like' ],
+            'filter.*.value' => ['sometimes'],
+            'filter.*.boolean' => ['sometimes', 'string', 'in:and,or'],
             'page' => ['integer'],
             'per_page' => ['integer'],
         ];

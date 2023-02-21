@@ -54,7 +54,7 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment)
     {
-        if($user->id === $comment->user_id || auth()->user()->role_id === 1) {
+        if(auth()->user()->id === $comment->user_id || auth()->user()->role_id === 1) {
             return true;
         }
         return Response::deny('Не твоё вот ты и бесишся');

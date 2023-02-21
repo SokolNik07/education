@@ -8,32 +8,32 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::group(['prefix' => '/users', 'namespace' => 'App\Http\Controllers\User', 'middleware' => ['auth:sanctum', 'admin']], function () {
-    Route::get('', 'IndexController')->name('user.index');
-    Route::get('/{user}', 'ShowController')->name('user.show');
-    Route::post('', 'StoreController')->name('user.store');
-    Route::put('/{user}', 'UpdateController')->name('user.update');
-    Route::delete('/{user}', 'DestroyController')->name('user.destroy');
+    Route::get('', 'UserCRUDController@index')->name('user.index');
+    Route::get('/{id}', 'UserCRUDController@show')->name('user.show');
+    Route::post('', 'UserCRUDController@store')->name('user.store');
+    Route::put('/{id}', 'UserCRUDController@update')->name('user.update');
+    Route::delete('/{id}', 'UserCRUDController@destroy')->name('user.destroy');
 });
 Route::group(['prefix' => '/articles', 'namespace' => 'App\Http\Controllers\Article', 'middleware' => 'auth:sanctum'], function () {
-    Route::get('', 'IndexController')->name('article.index');
-    Route::get('/{article}', 'ShowController')->name('article.show');
-    Route::post('', 'StoreController')->name('article.store');
-    Route::put('/{article}', 'UpdateController')->name('article.update');
-    Route::delete('/{article}', 'DestroyController')->name('article.destroy');
+    Route::get('', 'ArticleCRUDController@index')->name('article.index');
+    Route::get('/{id}', 'ArticleCRUDController@show')->name('article.show');
+    Route::post('', 'ArticleCRUDController@store')->name('article.store');
+    Route::put('/{id}', 'ArticleCRUDController@update')->name('article.update');
+    Route::delete('/{id}', 'ArticleCRUDController@destroy')->name('article.destroy');
 });
 Route::group(['prefix' => '/videos', 'namespace' => 'App\Http\Controllers\Video', 'middleware' => 'auth:sanctum'], function () {
-    Route::get('', 'IndexController')->name('video.index');
-    Route::get('/{video}', 'ShowController')->name('video.show');
-    Route::post('', 'StoreController')->name('video.store');
-    Route::put('/{video}', 'UpdateController')->name('video.update');
-    Route::delete('/{video}', 'DestroyController')->name('video.destroy');
+    Route::get('', 'VideoCRUDController@index')->name('video.index');
+    Route::get('/{id}', 'VideoCRUDController@show')->name('video.show');
+    Route::post('', 'VideoCRUDController@store')->name('video.store');
+    Route::put('/{id}', 'VideoCRUDController@update')->name('video.update');
+    Route::delete('/{id}', 'VideoCRUDController@destroy')->name('video.destroy');
 });
 Route::group(['prefix' => '/comments', 'namespace' => 'App\Http\Controllers\Comment', 'middleware' => 'auth:sanctum'], function () {
-    Route::get('', 'IndexController')->name('comment.index');
-    Route::get('/{comment}', 'ShowController')->name('comment.show');
-    Route::post('', 'StoreController')->name('comment.store');
-    Route::put('/{comment}', 'UpdateController')->name('comment.update');
-    Route::delete('/{comment}', 'DestroyController')->name('comment.destroy');
+    Route::get('', 'CommentCRUDController@index')->name('comment.index');
+    Route::get('/{id}', 'CommentCRUDController@show')->name('comment.show');
+    Route::post('', 'CommentCRUDController@store')->name('comment.store');
+    Route::put('/{id}', 'CommentCRUDController@update')->name('comment.update');
+    Route::delete('/{id}', 'CommentCRUDController@destroy')->name('comment.destroy');
 });
 Route::group(['namespace' => 'App\Http\Controllers\Registration'], function () {
     Route::post('/registration', 'RegistrationController')->name('registration');

@@ -16,7 +16,7 @@ class Video extends Model
         'url',
     ];
 
-    public function users() {
+    public function user() {
         return $this->belongsTo(User::class);
     }
 }
