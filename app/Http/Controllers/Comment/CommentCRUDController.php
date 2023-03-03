@@ -22,10 +22,9 @@ class CommentCRUDController extends Controller
     public function index(FilterRequest $request)
     {
         $builder = Comment::query();
-        $filter = $request->get('filter');
         $page = $request['page'] ?? 1;
         $perPage = $request['per_page'] ?? 10;
-        $builder = $this->serviceFilter->filter($filter, $builder);
+        $builder = $this->serviceFilter->filter($request, $builder);
         $result = $builder->paginate($perPage, ['*'], 'page', $page);
 
         return CommentResource::collection($result);

@@ -20,6 +20,5 @@ class ArticleResource extends JsonResource
             'name' => $this->name,
             'article' => $this->article,
         ];
-
     }
 }

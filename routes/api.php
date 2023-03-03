@@ -35,10 +35,19 @@ Route::group(['prefix' => '/comments', 'namespace' => 'App\Http\Controllers\Comm
     Route::put('/{id}', 'CommentCRUDController@update')->name('comment.update');
     Route::delete('/{id}', 'CommentCRUDController@destroy')->name('comment.destroy');
 });
-Route::group(['namespace' => 'App\Http\Controllers\Registration'], function () {
-    Route::post('/registration', 'RegistrationController')->name('registration');
-    Route::post('/login', 'LoginController')->name('login');
-    Route::get('/logout', 'LogoutController')->name('logout');
+Route::group(['namespace' => 'App\Http\Controllers\Auth'], function () {
+    Route::post('/registration', 'AuthController@registration')->name('registration');
+    Route::post('/login', 'AuthController@login')->name('login');
+    Route::get('/logout', 'AuthController@logout')->name('logout');
+    Route::post('/forgot-password', 'AuthController@forgotPassword')->name('forgot.password');
+    Route::post('/reset-password', 'AuthController@resetPassword')->name('password.reset');
+});
+Route::group(['prefix' => '/files', 'namespace' => 'App\Http\Controllers\FileManager', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('', 'FileManagerController@index')->name('file.index');
+    Route::post('', 'FileManagerController@store')->name('file.store');
+    Route::put('/{id}', 'FileManagerController@update')->name('file.update');
+    Route::get('/{id}', 'FileManagerController@show')->name('file.show');
+    Route::delete('/{id}', 'FileManagerController@destroy')->name('file.destroy');
 });
 
 Route::get('/email/verify', function () {
