@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Article;
+use App\Models\User;
 use App\Models\Video;
 use Illuminate\Database\Seeder;
 
@@ -16,7 +17,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-       Article::factory(50)->create();
-       Video::factory(50)->create();
+        User::factory(50)->create();
+        Article::factory(50)->create();
+        Video::factory(50)->create();
     }
 }

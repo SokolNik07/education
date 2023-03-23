@@ -5,24 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Article extends Model
+class File extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'name',
-        'article',
-        'image',
+        'path',
     ];
 
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
-
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo(User::class);
     }
 }

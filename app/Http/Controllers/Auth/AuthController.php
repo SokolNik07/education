@@ -7,6 +7,7 @@ use App\Http\Requests\User\LoginRequest;
 use App\Http\Requests\User\RegistrationRequest;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,15 +41,15 @@ class AuthController extends Controller
         $user = User::where('email', $request->get('email'))->first(); // найти одного пользователя с совпавшим email
 
         if (!$user) {
-            return ('Такого пользователя нет или email указан не верно');
+            return Response::deny('Такого пользователя нет или email указан не верно');
         }
         if (Auth::attempt($data, $request->boolean('remember'))) {                                        // если попытка аутентификации прошла успешно то
             $token = $user->createToken('base');
             return response()->json([
-                'token' => $token->plainTextToken                          // сгенерировать новый токен и вывести его текстовое значение
+                'token' => $token->plainTextToken // сгенерировать новый токен и вывести его текстовое значение
             ]);
         }
-        return ('email или пароль указаны не верно');
+        return Response::deny('email или пароль указаны не верно');
     }
 
     public function logout(Request $request)
@@ -56,7 +57,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return ('Вы свободны');
+        return Response::deny('Вы свободны');
     }
 
     public function forgotPassword(Request $request)
@@ -70,9 +71,9 @@ class AuthController extends Controller
         );
 
         if ($status === Password::RESET_LINK_SENT) {
-            return ("Ссылка для сброса пароля была отправлена на вашу почту {$request['email']}");
+            return Response::deny("Ссылка для сброса пароля была отправлена на вашу почту {$request['email']}");
         }
-        return ('Данная почта не существует либо указанна не верно');
+        return Response::deny('Данная почта не существует либо указанна не верно');
     }
 
     public function resetPassword(Request $request)
@@ -93,8 +94,8 @@ class AuthController extends Controller
         );
 
         if ($status === Password::PASSWORD_RESET) {
-            return ("Пароль успешно обновлён!");
+            return Response::deny("Пароль успешно обновлён!");
         }
-        return ('Данная почта не существует либо указанна не верно');
+        return Response::deny('Данная почта не существует либо указанна не верно');
     }
 }

@@ -5,20 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Article extends Model
+class Fraction extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'name',
-        'article',
-        'image',
+        'title',
+        'banner',
+        'description',
+        'founder',
     ];
 
-    public function comments()
+    public function characters()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Character::class);
     }
 
     public function user()

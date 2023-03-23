@@ -51,6 +51,12 @@ return [
     */
 
     'channels' => [
+        'articles' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/articles.log'),
+            'level' => env('LOG_LEVEL', 'info'),
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],

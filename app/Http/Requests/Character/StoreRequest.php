@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Article;
+namespace App\Http\Requests\Character;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -25,8 +25,13 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => ['required','string', 'min:3', 'max:30'],
-            'article' => ['required', 'string', 'min:25', 'max:255'],
-            'image' => ['sometimes', 'file', 'max:2048'],
+            'age' => ['required', 'integer', 'min:14', 'max:100'],
+            'biography' => ['required', 'string', 'min:25', 'max:255'],
+            'obituary' => ['sometimes', 'string', 'min:25', 'max:255'],
+            'status' => ['required', 'string'],
+            'fraction_id' => ['required', 'integer'],
+            'user_id' => ['required', 'integer'],
+            'profile_image' => ['sometimes', 'file', 'max:2048'],
         ];
     }
 }

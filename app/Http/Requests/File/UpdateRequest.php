@@ -24,8 +24,10 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
+//            'name' => ['sometimes', 'string', 'min:3', 'max:30'],
+//            'image' => ['sometimes', 'image:png'],
             'name' => ['sometimes', 'string', 'min:3', 'max:30'],
-            'image' => ['sometimes', 'image:png'],
+            'description' => ['sometimes', 'string', 'min:3', 'max:255'],
         ];
     }
 }

@@ -18,7 +18,7 @@ Route::group(['prefix' => '/articles', 'namespace' => 'App\Http\Controllers\Arti
     Route::get('', 'ArticleCRUDController@index')->name('article.index');
     Route::get('/{id}', 'ArticleCRUDController@show')->name('article.show');
     Route::post('', 'ArticleCRUDController@store')->name('article.store');
-    Route::put('/{id}', 'ArticleCRUDController@update')->name('article.update');
+    Route::post('/{id}', 'ArticleCRUDController@update')->name('article.update');
     Route::delete('/{id}', 'ArticleCRUDController@destroy')->name('article.destroy');
 });
 Route::group(['prefix' => '/videos', 'namespace' => 'App\Http\Controllers\Video', 'middleware' => 'auth:sanctum'], function () {
@@ -45,9 +45,9 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth'], function () {
 Route::group(['prefix' => '/files', 'namespace' => 'App\Http\Controllers\FileManager', 'middleware' => 'auth:sanctum'], function () {
     Route::get('', 'FileManagerController@index')->name('file.index');
     Route::post('', 'FileManagerController@store')->name('file.store');
-    Route::put('/{id}', 'FileManagerController@update')->name('file.update');
-    Route::get('/{id}', 'FileManagerController@show')->name('file.show');
-    Route::delete('/{id}', 'FileManagerController@destroy')->name('file.destroy');
+    Route::put('/{name}', 'FileManagerController@update')->name('file.update');
+    Route::get('/{name}', 'FileManagerController1@show')->name('file.show');
+    Route::delete('/{name}', 'FileManagerController@destroy')->name('file.destroy');
 });
 
 Route::get('/email/verify', function () {

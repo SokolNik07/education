@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources\Fraction;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class FractionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,12 +15,9 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'password' => $this->password,
-            'role_id' => $this->role_id,
-            'profile_image' => $this->profile_image,
+            'title' => $this->title,
+            'banner' => $this->banner,
+            'description' => $this->description,
         ];
     }
 }

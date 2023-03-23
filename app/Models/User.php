@@ -24,6 +24,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'role_id',
+        'profile_image',
     ];
 
     /**
@@ -44,19 +45,34 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    public function setPasswordAttribute($password) {
+
+    public function setPasswordAttribute($password)
+    {
         $this->attributes['password'] = Hash::make($password);
     }
-    public function articles() {
+
+    public function characters()
+    {
+        return $this->hasMany(Character::class);
+    }
+
+    public function articles()
+    {
         return $this->hasMany(Article::class);
     }
-    public function videos() {
+
+    public function videos()
+    {
         return $this->hasMany(Video::class);
     }
-    public function comments() {
+
+    public function comments()
+    {
         return $this->hasMany(Comment::class);
     }
-    public function role() {
+
+    public function role()
+    {
         return $this->belongsTo(Role::class);
     }
 }
