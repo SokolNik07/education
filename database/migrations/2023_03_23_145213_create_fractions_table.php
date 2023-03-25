@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('fractions', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('banner');
-            $table->integer('founder');
+            $table->string('image')->nullable();
+            $table->integer('user_id');
             $table->string('description');
             $table->timestamps();
         });

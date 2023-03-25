@@ -30,8 +30,7 @@ class StoreRequest extends FormRequest
             'obituary' => ['sometimes', 'string', 'min:25', 'max:255'],
             'status' => ['required', 'string'],
             'fraction_id' => ['required', 'integer'],
-            'user_id' => ['required', 'integer'],
-            'profile_image' => ['sometimes', 'file', 'max:2048'],
+            'image' => ['sometimes', 'file', 'max:2048'],
         ];
     }
 }

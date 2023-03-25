@@ -9,12 +9,10 @@ use App\Http\Requests\Article\UpdateRequest;
 use App\Http\Resources\Article\ArticleResource;
 use App\Models\Article;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Auth\Access\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class ArticleCRUDController extends Controller
 {
@@ -32,7 +30,6 @@ class ArticleCRUDController extends Controller
         $result = $builder->paginate($perPage, ['*'], 'page', $page);
 
         Log::channel((new Article)->getTable())->info("Пользователь: id({$request->user()->id}) name: {$request->user()->name} = просмотрел список сущностей");
-
         return ArticleResource::collection($result);
     }
 
@@ -42,26 +39,11 @@ class ArticleCRUDController extends Controller
      * @param StoreRequest $request
      * @return ArticleResource
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request, Article $id)
     {
-        $file = $request->file('image');
-        $extension = $file->getClientOriginalExtension();
-
-        $uniqueName = md5(microtime(true)) . '.' . $extension;
-
-        if ($request->hasFile('image')) {
-            $path = Storage::putFileAs('files', $file, $uniqueName);
-        }
-        $data = [
-            'name' => $request['name'],
-            'article' => $request['article'],
-            'user_id' => $request->user()->id,
-            'image' => $path,
-        ];
-        $article = Article::create($data);
+        $article = $this->crudService->create($request, $id);
 
         Log::channel((new Article)->getTable())->info("Пользователь: id({$request->user()->id}) name: {$request->user()->name} = создал новую сущность = {$article}");
-
         return new ArticleResource($article);
     }
 
@@ -69,6 +51,7 @@ class ArticleCRUDController extends Controller
      * Display the specified resource.
      *
      * @param Article $id
+     * @param Request $request
      * @return ArticleResource
      */
     public function show(Article $id, Request $request)
@@ -83,30 +66,15 @@ class ArticleCRUDController extends Controller
      * @param UpdateRequest $request
      * @param Article $id
      * @return ArticleResource
+     * @throws AuthorizationException
      */
     public function update(UpdateRequest $request, Article $id)
     {
-        if ($request->hasFile('image')) {
-            if ($id->image !== '') {
-                Storage::delete($id->image);
+        $this->authorize('update', $id);
 
-                $file = $request->file('image');
-                $extension = $file->getClientOriginalExtension();
-
-                $uniqueName = md5(microtime(true)) . '.' . $extension;
-                $path = Storage::putFileAs('files', $file, $uniqueName);
-            }
-        }
-        $data = [
-            'name' => $request['name'] ?? $id->name,
-            'article' => $request['article'] ?? $id->article,
-            'user_id' => $request->user()->id,
-            'image' => $path ?? $id->image,
-        ];
-        $id->update($data);
+        $this->crudService->update($request, $id);
 
         Log::channel((new Article)->getTable())->info("Пользователь: id({$request->user()->id}) name: {$request->user()->name} = обновил сущность {$id}");
-
         return new ArticleResource($id);
     }
 
@@ -114,6 +82,7 @@ class ArticleCRUDController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Article $id
+     * @param Request $request
      * @return JsonResponse
      * @throws AuthorizationException
      */
@@ -121,13 +90,9 @@ class ArticleCRUDController extends Controller
     {
         $this->authorize('delete', $id);
 
-        if ($id->image !== '') {
-            Storage::delete($id->image);
-        }
-        $id->delete();
+        $this->crudService->destroy($id);
 
         Log::channel((new Article)->getTable())->info("Пользователь: id({$request->user()->id}) name: {$request->user()->name} = удалил сущность {$id}");
-
         return response()->json(['message' => 'Файл успешно удалён.'], 200);
     }
 }

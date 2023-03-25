@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->integer('age');
             $table->string('biography');
             $table->string('obituary')->nullable();
-            $table->string('profile_image')->nullable();
+            $table->string('image')->nullable();
             $table->string('status');
             $table->integer('user_id');
             $table->integer('fraction_id');

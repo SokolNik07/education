@@ -17,7 +17,7 @@ class Character extends Model
         'status',
         'fraction_id',
         'user_id',
-        'profile_image',
+        'image',
     ];
 
     public function fraction()

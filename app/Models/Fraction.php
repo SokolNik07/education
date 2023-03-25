@@ -11,9 +11,9 @@ class Fraction extends Model
 
     protected $fillable = [
         'title',
-        'banner',
+        'image',
         'description',
-        'founder',
+        'user_id',
     ];
 
     public function characters()

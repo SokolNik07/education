@@ -17,10 +17,13 @@ class CharacterResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'email' => $this->email,
-            'password' => $this->password,
-            'role_id' => $this->role_id,
-            'profile_image' => $this->profile_image,
+            'age' => $this->age,
+            'biography' => $this->biography,
+            'obituary' => $this->obituary,
+            'status' => $this->status,
+            'fraction_id' => $this->fraction_id,
+            'user_id' => $this->user_id,
+            'image' => $this->image,
         ];
     }
 }

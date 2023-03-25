@@ -14,6 +14,20 @@ Route::group(['prefix' => '/users', 'namespace' => 'App\Http\Controllers\User', 
     Route::put('/{id}', 'UserCRUDController@update')->name('user.update');
     Route::delete('/{id}', 'UserCRUDController@destroy')->name('user.destroy');
 });
+Route::group(['prefix' => '/characters', 'namespace' => 'App\Http\Controllers\Character', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('', 'CharacterCRUDController@index')->name('character.index');
+    Route::get('/{id}', 'CharacterCRUDController@show')->name('character.show');
+    Route::post('', 'CharacterCRUDController@store')->name('character.store');
+    Route::post('/{id}', 'CharacterCRUDController@update')->name('character.update');
+    Route::delete('/{id}', 'CharacterCRUDController@destroy')->name('character.destroy');
+});
+Route::group(['prefix' => '/fractions', 'namespace' => 'App\Http\Controllers\Fraction', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('', 'FractionCRUDController@index')->name('fraction.index');
+    Route::get('/{id}', 'FractionCRUDController@show')->name('fraction.show');
+    Route::post('', 'FractionCRUDController@store')->name('fraction.store');
+    Route::post('/{id}', 'FractionCRUDController@update')->name('fraction.update');
+    Route::delete('/{id}', 'FractionCRUDController@destroy')->name('fraction.destroy');
+});
 Route::group(['prefix' => '/articles', 'namespace' => 'App\Http\Controllers\Article', 'middleware' => 'auth:sanctum'], function () {
     Route::get('', 'ArticleCRUDController@index')->name('article.index');
     Route::get('/{id}', 'ArticleCRUDController@show')->name('article.show');

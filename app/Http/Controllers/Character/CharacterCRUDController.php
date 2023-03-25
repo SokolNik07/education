@@ -8,11 +8,9 @@ use App\Http\Requests\Character\StoreRequest;
 use App\Http\Requests\Character\UpdateRequest;
 use App\Http\Resources\Character\CharacterResource;
 use App\Models\Character;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Storage;
 
 class CharacterCRUDController extends Controller
 {
@@ -38,20 +36,9 @@ class CharacterCRUDController extends Controller
      * @param StoreRequest $request
      * @return CharacterResource
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request, Character $id)
     {
-        $file = $request->file('profile_image');
-        $extension = $file->getClientOriginalExtension();
-
-        $uniqueName = md5(microtime(true)) . '.' . $extension;
-
-        if ($request->hasFile('profile_image')) {
-            $path = Storage::putFileAs('files', $file, $uniqueName);
-        }
-        $data = $request->validated();
-        $data['user_id'] = $request->user()->id;
-        $data['profile_profile_image'] = $path;
-        $character = Character::create($data);
+        $character = $this->crudService->create($request, $id);
 
         return new CharacterResource($character);
     }
@@ -76,20 +63,7 @@ class CharacterCRUDController extends Controller
      */
     public function update(UpdateRequest $request, Character $id)
     {
-        if ($request->hasFile('profile_image')) {
-            if ($id->profile_image !== '') {
-                Storage::delete($id->profile_image);
-
-                $file = $request->file('profile_image');
-                $extension = $file->getClientOriginalExtension();
-
-                $uniqueName = md5(microtime(true)) . '.' . $extension;
-                $path = Storage::putFileAs('files', $file, $uniqueName);
-            }
-        }
-        $data = $request->validated();
-        $data['profile_profile_image'] = $path;
-        $id->update($data);
+        $this->crudService->update($request, $id);
 
         return new CharacterResource($id);
     }
@@ -100,16 +74,10 @@ class CharacterCRUDController extends Controller
      * @param Character $id
      * @param Request $request
      * @return JsonResponse
-     * @throws AuthorizationException
      */
-    public function destroy(Character $id, Request $request)
+    public function destroy(Character $id)
     {
-        $this->authorize('delete', $id);
-
-        if ($id->profile_image !== '') {
-            Storage::delete($id->profile_image);
-        }
-        $id->delete();
+        $this->crudService->destroy($id);
 
         return response()->json(['message' => 'Файл успешно удалён.'], 200);
     }

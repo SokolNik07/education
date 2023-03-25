@@ -36,13 +36,11 @@ class CommentCRUDController extends Controller
      * @param StoreRequest $request
      * @return CommentResource
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request, Comment $id)
     {
-        $data = $request->validated();
-        $data['user_id'] = $request->user()->id;
-        $article = Comment::create($data);
+        $comment = $this->crudService->create($request, $id);
 
-        return new CommentResource($article);
+        return new CommentResource($comment);
     }
 
     /**
@@ -67,8 +65,7 @@ class CommentCRUDController extends Controller
     public function update(UpdateRequest $request, Comment $id)
     {
         $this->authorize('update', $id);
-        $data = $request->validated();
-        $id->update($data);
+        $this->crudService->update($request, $id);
 
         return new CommentResource($id);
     }
@@ -83,7 +80,7 @@ class CommentCRUDController extends Controller
     public function destroy(Comment $id)
     {
         $this->authorize('delete', $id);
-        $id->delete();
+        $this->crudService->destroy($id);
 
         return Response::deny('OK');
     }

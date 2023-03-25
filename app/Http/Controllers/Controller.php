@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CRUDService;
+use App\Services\FileService;
 use App\Services\ServiceFilter;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -13,8 +15,13 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public $serviceFilter;
-    public function __construct(ServiceFilter $serviceFilter)
+    public $fileService;
+    public $crudService;
+
+    public function __construct(ServiceFilter $serviceFilter, FileService $fileService, CRUDService $crudService)
     {
         $this->serviceFilter = $serviceFilter;
+        $this->fileService = $fileService;
+        $this->crudService = $crudService;
     }
 }

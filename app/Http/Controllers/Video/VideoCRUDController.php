@@ -36,13 +36,11 @@ class VideoCRUDController extends Controller
      * @param StoreRequest $request
      * @return VideoResource
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request, Video $id)
     {
-        $data = $request->validated();
-        $data['user_id'] = $request->user()->id;
-        $article = Video::create($data);
+        $video = $this->crudService->create($request, $id);
 
-        return new VideoResource($article);
+        return new VideoResource($video);
     }
 
     /**
@@ -67,8 +65,7 @@ class VideoCRUDController extends Controller
     public function update(UpdateRequest $request, Video $id)
     {
         $this->authorize('update', $id);
-        $data = $request->validated();
-        $id->update($data);
+        $this->crudService->update($request, $id);
 
         return new VideoResource($id);
     }
@@ -83,7 +80,7 @@ class VideoCRUDController extends Controller
     public function destroy(Video $id)
     {
         $this->authorize('delete', $id);
-        $id->delete();
+        $this->crudService->destroy($id);
 
         return Response::deny('OK');
     }

@@ -8,11 +8,8 @@ use App\Http\Requests\Fraction\StoreRequest;
 use App\Http\Requests\Fraction\UpdateRequest;
 use App\Http\Resources\Fraction\FractionResource;
 use App\Models\Fraction;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Storage;
 
 class FractionCRUDController extends Controller
 {
@@ -38,22 +35,11 @@ class FractionCRUDController extends Controller
      * @param StoreRequest $request
      * @return FractionResource
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request, Fraction $id)
     {
-        $file = $request->file('banner');
-        $extension = $file->getClientOriginalExtension();
+        $fraction = $this->crudService->create($request, $id);
 
-        $uniqueName = md5(microtime(true)) . '.' . $extension;
-
-        if ($request->hasFile('banner')) {
-            $path = Storage::putFileAs('files', $file, $uniqueName);
-        }
-        $data = $request->validated();
-        $data['founder'] = $request->user()->id;
-        $data['banner'] = $path;
-        $character = Fraction::create($data);
-
-        return new FractionResource($character);
+        return new FractionResource($fraction);
     }
 
     /**
@@ -76,20 +62,7 @@ class FractionCRUDController extends Controller
      */
     public function update(UpdateRequest $request, Fraction $id)
     {
-        if ($request->hasFile('banner')) {
-            if ($id->banner !== '') {
-                Storage::delete($id->banner);
-
-                $file = $request->file('banner');
-                $extension = $file->getClientOriginalExtension();
-
-                $uniqueName = md5(microtime(true)) . '.' . $extension;
-                $path = Storage::putFileAs('files', $file, $uniqueName);
-            }
-        }
-        $data = $request->validated();
-        $data['banner'] = $path;
-        $id->update($data);
+        $this->crudService->update($request, $id);
 
         return new FractionResource($id);
     }
@@ -98,18 +71,11 @@ class FractionCRUDController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Fraction $id
-     * @param Request $request
      * @return JsonResponse
-     * @throws AuthorizationException
      */
-    public function destroy(Fraction $id, Request $request)
+    public function destroy(Fraction $id)
     {
-        $this->authorize('delete', $id);
-
-        if ($id->banner !== '') {
-            Storage::delete($id->banner);
-        }
-        $id->delete();
+        $this->crudService->destroy($id);
 
         return response()->json(['message' => 'Файл успешно удалён.'], 200);
     }
